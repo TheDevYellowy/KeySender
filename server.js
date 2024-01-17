@@ -30,11 +30,14 @@ function startPingPong(s) {
   s.ping();
   let x = setTimeout(() => {
     s.close();
-    log.info(`Closing Zombie Connection`);
+    log.warn(`Closing Zombie Connection`);
     clearInterval(interval);
   });
 
-  s.once("pong", () => clearTimeout(x));
+  s.once("pong", () => {
+    log.info("Recieved Pong Event");
+    clearTimeout(x);
+  });
 }
 
 server.on("connection", (socket, req) => {
@@ -44,7 +47,7 @@ server.on("connection", (socket, req) => {
 
   socket.on("message", (data) => {
     try {
-      const json = JSON.parse(data);
+      const json = JSON.parse(data.toString());
       log.info(`Recieved message event\n${JSON.stringify(data, null, 2)}`);
       switch (json.message) {
         case "keydown":
