@@ -32,7 +32,7 @@ function startPingPong(s) {
     s.close();
     log.warn(`Closing Zombie Connection`);
     clearInterval(interval);
-  });
+  }, 10_000);
 
   s.once("pong", () => {
     log.info("Recieved Pong Event");
@@ -43,7 +43,7 @@ function startPingPong(s) {
 server.on("connection", (socket, req) => {
   interval = setInterval(() => {
     startPingPong(socket);
-  }, 10000);
+  }, 10_000);
 
   socket.on("message", async (data) => {
     try {
