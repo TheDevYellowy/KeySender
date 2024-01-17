@@ -1,5 +1,5 @@
 import { WebSocketServer } from "ws";
-import { uIOhook } from "uiohook-napi";
+import { UiohookKey, uIOhook } from "uiohook-napi";
 
 import { Service, EventLogger } from "node-windows";
 import { dirname } from "path";
@@ -48,16 +48,19 @@ server.on("connection", (socket, req) => {
   socket.on("message", async (data) => {
     try {
       const str = data.toString();
-      const json = JSON.parse(data.toString());
-      log.info(`Recieved message event\n${JSON.stringify(str, null, 2)}`);
+      const json = JSON.parse(str);
+      log.info(`Recieved message event\n${JSON.stringify(json, null, 2)}`);
+      // console.log(`Recieved message event\n${JSON.stringify(json, null, 2)}`);
       switch (json.message) {
         case "keydown":
-          uIOhook.keyToggle(json.keycode, "down");
+          await uIOhook.keyToggle(json.keycode, "down");
           break;
         case "keyup":
-          uIOhook.keyToggle(json.keycode, "up");
+          await uIOhook.keyToggle(json.keycode, "up");
           break;
       }
     } catch (e) {}
   });
 });
+
+uIOhook.start();
