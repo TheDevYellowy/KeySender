@@ -45,10 +45,11 @@ server.on("connection", (socket, req) => {
     startPingPong(socket);
   }, 10000);
 
-  socket.on("message", (data) => {
+  socket.on("message", async (data) => {
     try {
+      const str = data.toString();
       const json = JSON.parse(data.toString());
-      log.info(`Recieved message event\n${JSON.stringify(data, null, 2)}`);
+      log.info(`Recieved message event\n${JSON.stringify(str, null, 2)}`);
       switch (json.message) {
         case "keydown":
           uIOhook.keyToggle(json.keycode, "down");
