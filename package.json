@@ -6,7 +6,7 @@
   "main": "main.js",
   "keywords": [],
   "scripts": {
-    "client": "node client.js 192.168.0.",
+    "client": "node client.js 192.168.0.103",
     "server": "node server.js"
   },
   "author": "",

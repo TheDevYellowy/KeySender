@@ -43,13 +43,20 @@ uIOhook.on("keydown", (e) => {
   if (e.shiftKey) key += keys[e.keycode].toUpperCase();
   else key += keys[e.keycode];
 
+  sendEvent({ event: "keydown", keycode: e.keycode });
+
   console.log({ event: "keydown", e, key: key });
   curdown = e.keycode;
 });
 
 uIOhook.on("keyup", (e) => {
+  sendEvent({ event: "keyup", keycode: e.keycode });
   console.log({ event: "keyup", e, key: keys[e.keycode] });
   curdown = null;
 });
+
+function sendEvent(data) {
+  socket.send(JSON.stringify(data));
+}
 
 uIOhook.start();

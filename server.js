@@ -1,7 +1,7 @@
 import { WebSocketServer } from "ws";
 import { uIOhook } from "uiohook-napi";
 
-import { Service } from "node-windows";
+import { Service, EventLogger } from "node-windows";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -13,6 +13,8 @@ const svc = new Service({
   script: `${__dirname}/server.js`,
   nodeOptions: ["--harmony", "--max_old_space_size=4096"],
 });
+
+const log = new EventLogger("Key Sender Server");
 
 svc.on("install", () => {
   svc.start();
@@ -28,7 +30,7 @@ function startPingPong(s) {
   s.ping();
   let x = setTimeout(() => {
     s.close();
-    console.log(`Closing Zombie Connection`);
+    log.info(`Closing Zombie Connection`);
     clearInterval(interval);
   });
 
@@ -43,6 +45,7 @@ server.on("connection", (socket, req) => {
   socket.on("message", (data) => {
     try {
       const json = JSON.parse(data);
+      log.info(`Recieved message event\n${JSON.stringify(data, null, 2)}`);
       switch (json.message) {
         case "keydown":
           uIOhook.keyToggle(json.keycode, "down");
