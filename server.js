@@ -1,6 +1,5 @@
 import { WebSocketServer } from "ws";
 import { Key, keyboard } from "@nut-tree/nut-js";
-// import { UiohookKey } from "uiohook-napi";
 
 import { Service, EventLogger } from "node-windows";
 import { dirname } from "path";
@@ -71,10 +70,10 @@ server.on("connection", (socket, req) => {
       log.info(`Recieved message event\n${JSON.stringify(json, null, 2)}`);
       switch (json.message) {
         case "keydown":
-          await keyboard.pressKey(json.keycode);
+          await keyboard.pressKey(Key[json.key]);
           break;
         case "keyup":
-          await keyboard.releaseKey(json.keycode);
+          await keyboard.releaseKey(Key[json.key]);
           break;
       }
     } catch (e) {}

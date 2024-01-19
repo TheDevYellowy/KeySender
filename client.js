@@ -25,13 +25,20 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const serverIp = process.argv[2];
 const socket = new WebSocket(`ws://${serverIp}:1596`);
 
-socket.on("ping", () => socket.pong());
+socket.on("ping", () => {
+  console.log("Recieved Ping Event");
+  socket.pong();
+});
 
 var curdown = null;
 const keys = {};
 
 Object.keys(UiohookKey).forEach((key) => {
-  keys[UiohookKey[key]] = key.toLowerCase();
+  keys[UiohookKey[key]] = key;
+});
+
+socket.once("open", () => {
+  console.log(`[WS] Connected`);
 });
 
 uIOhook.on("keydown", (e) => {
@@ -41,16 +48,16 @@ uIOhook.on("keydown", (e) => {
   if (e.ctrlKey) key += "Ctrl+";
   if (e.altKey) key += "Alt+";
   if (e.shiftKey) key += keys[e.keycode].toUpperCase();
-  else key += keys[e.keycode];
+  else key += keys[e.keycode].toLowerCase();
 
-  sendEvent({ event: "keydown", keycode: e.keycode });
+  sendEvent({ event: "keydown", keycode: e.keycode, key: keys[e.keycode] });
 
-  console.log({ event: "keydown", e, key: key });
+  console.log({ event: "keydown", keycode: e.keycode, key: key });
   curdown = e.keycode;
 });
 
 uIOhook.on("keyup", (e) => {
-  sendEvent({ event: "keyup", keycode: e.keycode });
+  sendEvent({ event: "keyup", keycode: e.keycode, key: keys[e.keycode] });
   console.log({ event: "keyup", e, key: keys[e.keycode] });
   curdown = null;
 });
