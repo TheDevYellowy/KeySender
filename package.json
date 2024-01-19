@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@nut-tree/nut-js": "^3.1.2",
     "node-windows": "^1.0.0-beta.8",
     "uiohook-napi": "^1.5.2",
     "ws": "^8.16.0"
