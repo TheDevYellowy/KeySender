@@ -74,5 +74,3 @@ server.on("connection", (socket, req) => {
     } catch (e) {}
   });
 });
-
-uIOhook.start();
