@@ -1,5 +1,5 @@
 import { WebSocketServer } from "ws";
-import { keyboard } from "@nut-tree/nut-js";
+import { Key, keyboard } from "@nut-tree/nut-js";
 // import { UiohookKey } from "uiohook-napi";
 
 import { Service, EventLogger } from "node-windows";
@@ -26,6 +26,11 @@ svc.install();
 
 const server = new WebSocketServer({ port: 1596 });
 var interval = null;
+
+const keys = {};
+Object.keys(Key).forEach((k) => {
+  keys[Key[k]] = k.toUpperCase();
+});
 
 console.log = (text) => {
   log.info(text);
@@ -62,6 +67,7 @@ server.on("connection", (socket, req) => {
     try {
       const str = data.toString();
       const json = JSON.parse(str);
+      json.key = keys[json.keycode];
       log.info(`Recieved message event\n${JSON.stringify(json, null, 2)}`);
       switch (json.message) {
         case "keydown":
