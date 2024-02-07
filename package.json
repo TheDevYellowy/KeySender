@@ -6,14 +6,14 @@
   "main": "main.js",
   "keywords": [],
   "scripts": {
-    "client": "node client.js 192.168.0.103",
+    "client": "node client.js 192.168.0.104",
     "server": "node server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@nut-tree/nut-js": "^3.1.2",
     "node-windows": "^1.0.0-beta.8",
+    "robotjs": "^0.6.0",
     "uiohook-napi": "^1.5.2",
     "ws": "^8.16.0"
   }

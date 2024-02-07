@@ -1,5 +1,5 @@
 import { WebSocketServer } from "ws";
-import { Key, keyboard } from "@nut-tree/nut-js";
+import robot from "robotjs";
 
 import { Service, EventLogger } from "node-windows";
 import { dirname } from "path";
@@ -69,10 +69,10 @@ server.on("connection", (socket, req) => {
       log.info(`Recieved message event\n${JSON.stringify(json, null, 2)}`);
       switch (json.message) {
         case "keydown":
-          await keyboard.pressKey(Key[json.key]);
+          robot.keyToggle(json.key, "down");
           break;
         case "keyup":
-          await keyboard.releaseKey(Key[json.key]);
+          robot.keyToggle(json.key, "up");
           break;
       }
     } catch (e) {}
