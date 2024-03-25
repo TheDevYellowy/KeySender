@@ -18,6 +18,18 @@ if (option == "ns") {
     script: `${__dirname}/server.js`,
     nodeOptions: ["--harmony", "--max_old_space_size=4096"],
   });
+
+  console.log = (text) => {
+    log.info(text);
+  };
+
+  console.warn = (text) => {
+    log.warn(text);
+  };
+
+  console.error = (text) => {
+    log.error(text);
+  };
 }
 
 const log = new EventLogger("Key Sender Server");
@@ -36,18 +48,6 @@ var interval = null;
 // Object.keys(Key).forEach((k) => {
 //   keys[Key[k]] = k.toUpperCase();
 // });
-
-console.log = (text) => {
-  log.info(text);
-};
-
-console.warn = (text) => {
-  log.warn(text);
-};
-
-console.error = (text) => {
-  log.error(text);
-};
 
 function startPingPong(s) {
   s.ping();
