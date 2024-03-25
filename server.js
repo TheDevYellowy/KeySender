@@ -73,7 +73,7 @@ server.on("connection", (socket, req) => {
       const str = data.toString();
       const json = JSON.parse(str);
       log.info(`Recieved message event\n${JSON.stringify(json, null, 2)}`);
-      robot.keyToggle(json.key, json.message);
+      robot.keyToggle(json.key, json.event);
       // switch (json.message) {
       //   case "keydown":
       //     robot.keyToggle(json.key, "down");
