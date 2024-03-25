@@ -53,12 +53,12 @@ function startPingPong(s) {
   s.ping();
   let x = setTimeout(() => {
     s.close();
-    log.warn(`Closing Zombie Connection`);
+    console.warn(`Closing Zombie Connection`);
     clearInterval(interval);
   }, 10_000);
 
   s.once("pong", () => {
-    log.info("Recieved Pong Event");
+    console.log("Recieved Pong Event");
     clearTimeout(x);
   });
 }
@@ -72,7 +72,7 @@ server.on("connection", (socket, req) => {
     try {
       const str = data.toString();
       const json = JSON.parse(str);
-      log.info(`Recieved message event\n${JSON.stringify(json, null, 2)}`);
+      console.log(`Recieved message event\n${JSON.stringify(json, null, 2)}`);
       robot.keyToggle(json.key, json.event);
       // switch (json.message) {
       //   case "keydown":
@@ -83,7 +83,7 @@ server.on("connection", (socket, req) => {
       //     break;
       // }
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     }
   });
 });
