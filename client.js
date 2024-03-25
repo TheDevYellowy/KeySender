@@ -50,14 +50,14 @@ uIOhook.on("keydown", (e) => {
   if (e.shiftKey) key += keys[e.keycode].toUpperCase();
   else key += keys[e.keycode].toLowerCase();
 
-  sendEvent({ event: "keydown", keycode: e.keycode, key: keys[e.keycode] });
+  sendEvent({ event: "down", keycode: e.keycode, key: keys[e.keycode] });
 
   console.log({ event: "keydown", keycode: e.keycode, key: key });
   curdown = e.keycode;
 });
 
 uIOhook.on("keyup", (e) => {
-  sendEvent({ event: "keyup", keycode: e.keycode, key: keys[e.keycode] });
+  sendEvent({ event: "up", keycode: e.keycode, key: keys[e.keycode] });
   console.log({ event: "keyup", e, key: keys[e.keycode] });
   curdown = null;
 });
