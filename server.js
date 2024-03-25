@@ -8,6 +8,7 @@ import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const option = process.argv[2];
+const keys = ["v"];
 
 if (option == "ns") {
   var svc = null;
@@ -44,11 +45,6 @@ svc?.install();
 const server = new WebSocketServer({ port: 1596 });
 var interval = null;
 
-// const keys = {};
-// Object.keys(Key).forEach((k) => {
-//   keys[Key[k]] = k.toUpperCase();
-// });
-
 function startPingPong(s) {
   s.ping();
   let x = setTimeout(() => {
@@ -73,17 +69,10 @@ server.on("connection", (socket, req) => {
       const str = data.toString();
       const json = JSON.parse(str);
       console.log(`Recieved message event\n${JSON.stringify(json, null, 2)}`);
-      robot.keyToggle(json.key, json.event);
-      // switch (json.message) {
-      //   case "keydown":
-      //     robot.keyToggle(json.key, "down");
-      //     break;
-      //   case "keyup":
-      //     robot.keyToggle(json.key, "up");
-      //     break;
-      // }
+
+      if (keys.includes(json.key)) robot.keyToggle(json.key, json.event);
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     }
   });
 });

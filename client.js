@@ -1,4 +1,4 @@
-import { uIOhook, UiohookKey } from "uiohook-napi";
+import * as gkm from "gkm";
 import { WebSocket } from "ws";
 
 import { dirname } from "path";
@@ -31,36 +31,26 @@ socket.on("ping", () => {
 });
 
 var curdown = null;
-const keys = {};
-
-Object.keys(UiohookKey).forEach((key) => {
-  keys[UiohookKey[key]] = key;
-});
 
 socket.once("open", () => {
   console.log(`[WS] Connected`);
 });
 
-uIOhook.on("keydown", (e) => {
-  if (e.keycode == curdown) return;
+gkm.events.on("key.*", (data) => {
+  const event = gkm.events.event.split(".")[1];
+  if (event == "typed") return;
+  const key = data[0].toLowerCase();
 
-  var key = "";
-  if (e.ctrlKey) key += "Ctrl+";
-  if (e.altKey) key += "Alt+";
-  if (e.shiftKey) key += keys[e.keycode].toUpperCase();
-  else key += keys[e.keycode].toLowerCase();
-
-  sendEvent({ event: "down", keycode: e.keycode, key: keys[e.keycode] });
-  curdown = e.keycode;
-});
-
-uIOhook.on("keyup", (e) => {
-  sendEvent({ event: "up", keycode: e.keycode, key: keys[e.keycode] });
-  curdown = null;
+  if (event == "pressed") {
+    if (key == curdown) return;
+    sendEvent({ event: "down", key });
+    curdown = key;
+  } else {
+    sendEvent({ event: "up", key });
+    curdown = null;
+  }
 });
 
 function sendEvent(data) {
   socket.send(JSON.stringify(data));
 }
-
-uIOhook.start();
