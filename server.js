@@ -9,6 +9,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const option = process.argv[2];
 const keys = ["v"];
+var copy_mouse = false;
 
 if (option == "ns") {
   var svc = null;
@@ -68,9 +69,21 @@ server.on("connection", (socket, req) => {
     try {
       const str = data.toString();
       const json = JSON.parse(str);
-      console.log(`Recieved message event\n${JSON.stringify(json, null, 2)}`);
+      if (json.key == "f10") copy_mouse = !copy_mouse;
 
-      if (keys.includes(json.key)) robot.keyToggle(json.key, json.event);
+      if (copy_mouse) {
+        switch (json.event) {
+          case "mouseMove":
+            robot.moveMouse(json.x, json.y);
+            break;
+          case "mouseClick":
+            robot.mouseClick(json.button);
+            break;
+        }
+      } else {
+        if (json.event.includes("mouse")) return;
+        if (keys.includes(json.key)) robot.keyToggle(json.key, json.event);
+      }
     } catch (e) {
       console.error(e);
     }

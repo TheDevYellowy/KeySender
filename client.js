@@ -26,7 +26,7 @@ const serverIp = process.argv[2];
 const socket = new WebSocket(`ws://${serverIp}:1596`);
 
 socket.on("ping", () => {
-  console.log("Recieved Ping Event");
+  // console.log("Recieved Ping Event");
   socket.pong();
 });
 
@@ -48,6 +48,30 @@ gkm.events.on("key.*", (data) => {
   } else {
     sendEvent({ event: "up", key });
     curdown = null;
+  }
+});
+
+gkm.events.on("mouse.*", (data) => {
+  const event = gkm.events.event.split(".")[1];
+  if (data[0].includes(",")) {
+    const [x, y] = data[0].split(",");
+    sendEvent({ event: "mouseMove", x, y });
+  } else {
+    if (event == "clicked") return;
+    let button;
+    switch (data[0]) {
+      case "1":
+        button = "left";
+        break;
+      case "2":
+        button = "right";
+        break;
+      case "3":
+        button = "middle";
+        break;
+    }
+
+    sendEvent({ event: "mouseClick", button });
   }
 });
 
